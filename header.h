@@ -32,8 +32,9 @@
 #include "qaxobject.h"
 
 // STL
-// #include <iostream>
-// #include <algorithm>
-// #include <list>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <list>
 
 #endif // !HEADER_H

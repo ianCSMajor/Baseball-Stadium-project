@@ -2,9 +2,6 @@
 
 database::database()
 {
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(DB_PATH);
-    db.open();
 }
 
 database::~database() {}
@@ -12,22 +9,35 @@ database::~database() {}
 void database::createDatabase()
 {
     QSqlQuery query;
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(DB_PATH);
+    db.open();
+
+    query.exec("CREATE TABLE Distances("
+               "StartingCollege VARCHAR(60) PRIMARY KEY,"
+               "EndingCollege   VARCHAR(60),"
+               "Distance        INTEGER));");
+
+    query.exec("CREATE TABLE Souvenirs("
+               "College VARCHAR(60) PRIMARY KEY,"
+               "TraditionalSouvenir VARCHAR(60),"
+               "Cost NUMERIC));");
 }
 
-void database::readExcel()
+void database::readExcel(QString excelPath, int worksheetNumber, int row, int col)
 {
     auto excel     = new QAxObject("Excel.Application");
     auto workbooks = excel->querySubObject("Workbooks");
-    auto workbook  = workbooks->querySubObject("Open(const QString&)", EX_PATH);
+    auto workbook  = workbooks->querySubObject("Open(const QString&)", excelPath);
     auto sheets    = workbook->querySubObject("Worksheets");
-    auto sheet     = sheets->querySubObject("Item(int)", 1);    // use first worksheet
+    auto sheet     = sheets->querySubObject("Item(int)", worksheetNumber);    // use first worksheet
 
     // setup a range of 61 rows and 3 columns
-    auto range     = sheet->querySubObject("Range(A1,C61)");
+//    auto range     = sheet->querySubObject("Range(A1,C61)");
 
-    for(int i = 1; i <= 61; ++i)
+    for(int x = 1; x <= row; ++x)
     {
-        auto cell = sheet->querySubObject("Cells(int, int)", i, 1);
+        auto cell = sheet->querySubObject("Cells(int, int)", x, col);
         qDebug() << cell->dynamicCall("Value()").toInt();
     }
 

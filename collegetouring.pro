@@ -16,11 +16,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         database.cpp \
+        doublylinkedlist.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
         database.h \
+        doublylinkedlist.h \
         header.h \
         mainwindow.h
 

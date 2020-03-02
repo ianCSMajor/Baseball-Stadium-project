@@ -15,6 +15,9 @@ public:
     ~database();
 
     void createDatabase();
+    void addDistancesTable(QString startingCollege, std::vector<QString> endingCollege, std::vector<unsigned int> distance);
+    void addSouvenirsTable(QString collegeName, std::vector<QString> souvenirName, std::vector<double> souvenirPricing);
+
     void readExcel(QString excelPath, int worksheetNumber, int row, int col);
 };
 

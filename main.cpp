@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
     w.show();
 
     db.createDatabase();
-    // db.readExcel();
 
     return a.exec();
 }

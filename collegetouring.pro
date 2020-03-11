@@ -10,26 +10,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = untitled
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         database.cpp \
-        doublylinkedlist.cpp \
-        linkedlistiterator.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
         database.h \
-        doublylinkedlist.h \
         header.h \
-        linkedlistiterator.h \
         mainwindow.h
 
 FORMS += \
-        mainwindow.ui
+    addsouvenir.ui \
+    mainwindow.ui \
+    plantrip.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -3,22 +3,41 @@
 
 #include "header.h"
 
+namespace colleges
+{
+    typedef std::set<std::pair<QString, double>> distance; // set of ending college, distance
+    typedef std::set<std::pair<QString, double>> souvenir; // set of souvenir names and prices
+}
+
 class database
 {
 private:
     QSqlDatabase db;
-    QString DB_PATH = "D:/Programming/CS1D-master/CS1D-Projejt--jgrady15/database.sqlite";
-    QString EX_PATH = "D:/Programming/CS1D-master/College Touring Project-1/College Campus Distances and Souvenirs.xlsx";
+    std::map<QString, colleges::distance> distanceMap; // Key is starting college
+    std::map<QString, colleges::souvenir> souvenirMap; // Key is name of college
 
 public:
     database();
     ~database();
 
     void createDatabase();
-    void addDistancesTable(QString startingCollege, std::vector<QString> endingCollege, std::vector<unsigned int> distance);
-    void addSouvenirsTable(QString collegeName, std::vector<QString> souvenirName, std::vector<double> souvenirPricing);
+    void readExcelFile(int worksheetNumber, int row);
 
-    void readExcel(QString excelPath, int worksheetNumber, int row, int col);
+    auto getDistanceMap() const;
+    auto getSouvenirMap() const;
+
+    void insertDistanceMapset(QString key, QString endingCollege, double distance);
+    void insertSouvenirMapset(QString key, QString souvenirName, double price);
+
+    auto getDistanceSetPair(QString searchKey);
+    auto getSouvenirSetPair(QString searchKey);
+
+    auto iterateDistanceValue(QString searchKey);
+    auto iterateSouvenirValue(QString searchKey);
+
+    QString getDistanceMapKey(QString search);
+    QString getSouvenirMapKey(QString search);
+
 };
 
 #endif // DATABASE_H

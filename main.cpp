@@ -1,16 +1,14 @@
-#include "header.h"
 #include "database.h"
 #include "mainwindow.h"
+
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    database db;
     MainWindow w;
+    database db;
 
     w.show();
-
-    db.createDatabase();
-
     return a.exec();
 }

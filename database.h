@@ -5,37 +5,49 @@
 
 namespace colleges
 {
-    typedef std::set<std::pair<QString, double>> distance; // set of ending college, distance
-    typedef std::set<std::pair<QString, double>> souvenir; // set of souvenir names and prices
+    typedef std::vector<std::pair<QString, double>> distanceVectoredPair; // set of ending college, distance
+    typedef std::vector<std::pair<QString, double>> souvenirVectoredPair; // set of souvenir names and prices
+    typedef std::vector<std::pair<QString, double>> tempVectoredPair; // temp data set for readExcelFile
 }
 
 class database
 {
 private:
     QSqlDatabase db;
-    std::map<QString, colleges::distance> distanceMap; // Key is starting college
-    std::map<QString, colleges::souvenir> souvenirMap; // Key is name of college
+    std::unordered_map<QString, colleges::distanceVectoredPair> distanceMap; // Key is starting college
+    std::unordered_map<QString, colleges::souvenirVectoredPair> souvenirMap; // Key is name of college
 
 public:
     database();
     ~database();
 
+    // DATABASE FUNCTIONS
+    void openDatabase();
     void createDatabase();
+    void printDistancesTable();
+
+    void insertDistanceTable(QString key, QString temp1, double temp2);
+    void insertSouvenirTable(QString key, QString temp1, double temp2);
+
+    QSqlDatabase getDatabase();
+
+    // EXCEL FUNCTIONS
     void readExcelFile(int worksheetNumber, int row);
 
-    auto getDistanceMap() const;
-    auto getSouvenirMap() const;
+    // MAP VECTORED PAIR FUNCTIONS
+    std::unordered_map<QString, colleges::distanceVectoredPair> getDistanceMap() const;
+    std::unordered_map<QString, colleges::distanceVectoredPair> getSouvenirMap() const;
 
-    void insertDistanceMapset(QString key, QString endingCollege, double distance);
-    void insertSouvenirMapset(QString key, QString souvenirName, double price);
+    QString displayDistanceKey() const;
+    QString displaySouvenirKey() const;
 
-    auto getDistanceSetPair(QString searchKey);
-    auto getSouvenirSetPair(QString searchKey);
+    void editSouvenirName();
+    void editSouvenirPrice();
 
-    auto iterateDistanceValue(QString searchKey);
-    auto iterateSouvenirValue(QString searchKey);
+    void printDistanceMap();
+    void printSouvenirMap();
 
-    QString getDistanceMapKey(QString search);
+    void insertDistanceMap(QString key, colleges::tempVectoredPair temp);
     QString getSouvenirMapKey(QString search);
 
 };

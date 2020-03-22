@@ -15,19 +15,23 @@ CONFIG += console c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+        addsouvenirs.cpp \
         database.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        plantrips.cpp
 
 HEADERS += \
+        addsouvenirs.h \
         database.h \
         header.h \
-        mainwindow.h
+        mainwindow.h \
+        plantrips.h
 
 FORMS += \
-    addsouvenir.ui \
+    addsouvenirs.ui \
     mainwindow.ui \
-    plantrip.ui
+    plantrips.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

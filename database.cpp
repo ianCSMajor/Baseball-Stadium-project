@@ -20,21 +20,68 @@ database::database()
 
 database::~database()
 {
-    db.close();
+}
+
+void database::openDatabase()
+{
+    db.open();
 }
 
 void database::createDatabase()
 {
     QSqlQuery query;
-    query.exec("CREATE TABLE Distances("
-               "StartingCollege VARCHAR(60) UNIQUE KEY,"
-               "EndingCollege   VARCHAR(60),"
-               "DistanceBetween NUMERIC);");
+    query.exec("CREATE TABLE Distances ("
+               "StartingCollege VARCHAR(60),"
+               "EndingCollege VARCHAR(60),"
+               "DistanceBetween NUMERIC,"
+               "UNIQUE (StartingCollege, EndingCollege));");
 
-    query.exec("CREATE TABLE Souvenirs("
-               "College VARCHAR(60) PRIMARY KEY,"
-               "TraditionalSouvenirs VARCHAR(30) UNIQUE KEY,"
-               "Cost NUMERIC);");
+    query.exec("CREATE TABLE Souvenirs ("
+               "College VARCHAR(60)," // Per column
+               "TraditionalSouvenirs VARCHAR(30),"
+               "Cost NUMERIC,"
+               "UNIQUE (College, TraditionalSouvenirs));");
+
+    query.clear();
+}
+
+void database::printDistancesTable()
+{
+}
+
+void database::insertDistanceTable(QString key, QString temp1, double temp2)
+{
+    QSqlQuery query(db);
+    query.prepare("INSERT OR IGNORE INTO Distances (StartingCollege, EndingCollege, DistanceBetween)"
+                  "VALUES (:startingCollege, :endingCollege, :distanceBetween);");
+
+    query.bindValue(":startingCollege", key);
+    query.bindValue(":endingCollege", temp1);
+    query.bindValue(":distanceBetween", temp2);
+
+    if(!query.exec())
+        qDebug() << "ERROR: " << query.lastError();
+    query.clear();
+}
+
+void database::insertSouvenirTable(QString key, QString temp1, double temp2)
+{
+    QSqlQuery query(db);
+    query.prepare("INSERT OR IGNORE INTO Souvenirs (College, TraditionalSouvenirs, Cost)"
+                  "VALUES (:college, :traditionalSouvenirs, :cost);");
+
+    query.bindValue(":college", key);
+    query.bindValue(":traditionalSouvenirs", temp1);
+    query.bindValue(":cost", temp2);
+
+    if(!query.exec())
+        qDebug() << "ERROR: " << query.lastError();
+    query.clear();
+}
+
+QSqlDatabase database::getDatabase()
+{
+    return db;
 }
 
 void database::readExcelFile(int worksheetNumber, int row)
@@ -47,154 +94,93 @@ void database::readExcelFile(int worksheetNumber, int row)
     auto sheet     = sheets->querySubObject("Item(int)", worksheetNumber);    // 1 is Distances, 2 is Souvenirs
 
     // Variables to be used in for loop
-    QString key, temp1;
+    colleges::tempVectoredPair tempDataset;
+    QString key, temp1, comparison;
     double temp2;
-    PairedSet tempPair;
     for(int x = 2; x != row; ++x)
     {
-        key = sheet->querySubObject("Cells(int, int)", x, 1)->dynamicCall("Value()").toString();
-        temp1 = sheet->querySubObject("Cells(int, int)", x, 2)->dynamicCall("Value()").toString();
-        temp2 = sheet->querySubObject("Cells(int, int)", x, 3)->dynamicCall("Value()").toDouble();
-        std::make_pair(temp1, temp2);
+        key = sheet->querySubObject("Cells(int, int)", x, 1)->dynamicCall("Value()").toString(); // retrieve key from first column
+        temp1 = sheet->querySubObject("Cells(int, int)", x, 2)->dynamicCall("Value()").toString(); // get data from second column
 
-        if(key != sheet->querySubObject("Cells(int, int)", x + 1, 1)->dynamicCall("Value()").toString())
+        if(worksheetNumber == 1 || worksheetNumber == 3)
         {
-            if(worksheetNumber == 1 || worksheetNumber == 3)
-                distanceMap.insert({key, tempPair});
+            temp2 = sheet->querySubObject("Cells(int, int)", x, 3)->dynamicCall("Value()").toDouble(); // get data from third column
+            insertDistanceTable(key, temp1, temp2);
+        }
+
+        else if(worksheetNumber == 2)
+        {
+            temp2 = (sheet->querySubObject("Cells(int, int)", x, 3)->dynamicCall("Value()").toDouble() * 0.0001); // get data from third column
+            insertSouvenirTable(key, temp1, temp2);
+        }
+
+        tempDataset.push_back({temp1, temp2});
+
+        comparison = sheet->querySubObject("Cells(int, int)", x + 1, 1)->dynamicCall("Value()").toString(); // checks the next row in the first column
+        if(key != comparison)
+        {
+            if(worksheetNumber == 1)
+                distanceMap[key] = tempDataset;
+
             else if(worksheetNumber == 2)
-                souvenirMap.insert({key, tempPair});
-        }
+                souvenirMap[key] = tempDataset;
 
-    }
+            else if(worksheetNumber == 3)
+                insertDistanceMap(key, tempDataset);
 
-    if(worksheetNumber == 1)
-    {
-        for(int x = 2; x <= 111; ++x)
-        {
-            auto cell = sheet->querySubObject("Cells(int, int)", x, 1);
-            key = cell->dynamicCall("Value()").toString();
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 2);
-            tempDistance.endingCollege.push_back(cell->dynamicCall("Value()").toString());
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 3);
-            tempDistance.totalDistance.push_back(cell->dynamicCall("Value()").toInt());
-
-            // populateDistancesTable(tempDistance.startingCollege, tempDistance.endingCollege[i], tempDistance.totalDistance[i]);
-            // ++i;
-            if(tempDistance.startingCollege != sheet->querySubObject("Cells(int, int)", x + 1, 1)->dynamicCall("Value()").toString())
-            {
-                distance.push_back(tempDistance);
-
-                tempDistance.endingCollege.clear();
-                tempDistance.totalDistance.clear();
-                // i = 0;
-            }
-        }
-    }
-
-    // Calls the souvenirs worksheet
-    else if (worksheetNumber == 2)
-    {
-        for(int x = 2; x <= 61; ++x)
-        {
-            auto cell = sheet->querySubObject("Cells(int, int)", x, 1);
-            tempSouvenir.collegeName = cell->dynamicCall("Value()").toString();
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 2);
-            tempSouvenir.souvenirName.push_back(cell->dynamicCall("Value()").toString());
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 3);
-            tempSouvenir.souvenirPricing.push_back(cell->dynamicCall("Value()").toDouble());
-
-            // populateSouvenirsTable(tempSouvenir.collegeName, tempSouvenir.souvenirName[i], tempSouvenir.souvenirPricing[i]);
-            // ++i;
-            if(tempSouvenir.collegeName != sheet->querySubObject("Cells(int, int)", x + 1, 1)->dynamicCall("Value()").toString())
-            {
-                souvenir.push_back(tempSouvenir);
-
-                tempSouvenir.souvenirName.clear();
-                tempSouvenir.souvenirPricing.clear();
-                // i = 0;
-            }
-        }
-    }
-
-    else if (worksheetNumber == 3)
-    {
-        for(int x = 2; x <= 47; ++x)
-        {
-            auto cell = sheet->querySubObject("Cells(int, int)", x, 1);
-            tempSouvenir.collegeName = cell->dynamicCall("Value()").toString();
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 2);
-            tempSouvenir.souvenirName.push_back(cell->dynamicCall("Value()").toString());
-
-            cell = sheet->querySubObject("Cells(int, int)", x, 3);
-            tempSouvenir.souvenirPricing.push_back(cell->dynamicCall("Value()").toDouble());
-
-            // populateSouvenirsTable(tempSouvenir.collegeName, tempSouvenir.souvenirName[i], tempSouvenir.souvenirPricing[i]);
-            // ++i;
-            if(tempSouvenir.collegeName != sheet->querySubObject("Cells(int, int)", x + 1, 1)->dynamicCall("Value()").toString())
-            {
-                souvenir.push_back(tempSouvenir);
-
-                tempSouvenir.souvenirName.clear();
-                tempSouvenir.souvenirPricing.clear();
-                // i = 0;
-            }
+            tempDataset.clear();
         }
     }
 
     excel->dynamicCall("Quit()");
 }
 
-auto database::getDistanceMap() const
+std::unordered_map<QString, colleges::distanceVectoredPair> database::getDistanceMap() const
 {
     return distanceMap;
 }
 
-auto database::getSouvenirMap() const
+std::unordered_map<QString, colleges::distanceVectoredPair> database::getSouvenirMap() const
 {
     return souvenirMap;
 }
 
-void database::insertDistanceMap(QString key, QString endingCollege, double distance)
+void database::insertDistanceMap(QString key, colleges::tempVectoredPair tempDataset)
 {
-
+    auto primaryIterator = distanceMap.find(key);
+    if(primaryIterator != distanceMap.end())
+        for(auto secondaryIterator = tempDataset.begin(); secondaryIterator != tempDataset.end() ; ++secondaryIterator)
+            primaryIterator->second.push_back(std::make_pair(secondaryIterator->first, secondaryIterator->second));
+    else
+        distanceMap[key] = tempDataset;
 }
 
-void database::insertSouvenirMap(QString key, QString souvenirName, double price)
+void database::printSouvenirMap()
 {
+    for(auto it: souvenirMap)
+    {
+        qDebug() << "College: " << it.first;
+        for(auto tempIt : it.second)
+        {
+            qDebug() << "Traditional Souvenirs: " << tempIt.first;
+            qDebug() << "Cost: " << tempIt.second;
+        }
 
+        qDebug() << "";
+    }
 }
 
-auto database::getDistanceVectoredPair(QString searchKey)
+void database::printDistanceMap()
 {
+    for(auto it: distanceMap)
+    {
+        qDebug() << "Starting College: " << it.first;
+        for(auto tempIt : it.second)
+        {
+            qDebug() << "Ending College: " << tempIt.first;
+            qDebug() << "Total Distance: " << tempIt.second;
+        }
 
-}
-
-auto database::getSouvenirVectoredPair(QString searchKey)
-{
-
-}
-
-auto database::iterateDistanceValue(QString searchKey)
-{
-
-}
-
-auto database::iterateSouvenirValue(QString searchKey)
-{
-
-}
-
-QString database::getDistanceMapKey(QString search)
-{
-
-}
-
-QString database::getSouvenirMapKey(QString search)
-{
-
+        qDebug() << "";
+    }
 }

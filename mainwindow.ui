@@ -19,16 +19,16 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1221</width>
-      <height>731</height>
+      <width>1231</width>
+      <height>741</height>
      </rect>
     </property>
     <widget class="QWidget" name="mainPage">
      <widget class="QLabel" name="homeTitle">
       <property name="geometry">
        <rect>
-        <x>400</x>
-        <y>200</y>
+        <x>410</x>
+        <y>230</y>
         <width>401</width>
         <height>61</height>
        </rect>
@@ -183,16 +183,6 @@
        <string>Total Distance:</string>
       </property>
      </widget>
-     <widget class="QListView" name="viewColleges_displayList">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>170</y>
-        <width>301</width>
-        <height>371</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="viewColleges_productPrice">
       <property name="enabled">
        <bool>false</bool>
@@ -232,7 +222,7 @@
        <string>List of Souvenirs at:</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="viewColleges_souvenirList">
+     <widget class="QLineEdit" name="viewColleges_collegeSelected">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -258,6 +248,16 @@
        <string>?</string>
       </property>
      </widget>
+     <widget class="QListWidget" name="viewColleges_displayList">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>170</y>
+        <width>301</width>
+        <height>361</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="planTrips">
      <widget class="QPushButton" name="planTrips_backButton">
@@ -271,26 +271,6 @@
       </property>
       <property name="text">
        <string>&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</string>
-      </property>
-     </widget>
-     <widget class="QListView" name="planTrips_displayStartingColleges">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>170</y>
-        <width>301</width>
-        <height>371</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QListView" name="planTrips_displayPlannedColleges">
-      <property name="geometry">
-       <rect>
-        <x>620</x>
-        <y>170</y>
-        <width>301</width>
-        <height>371</height>
-       </rect>
       </property>
      </widget>
      <widget class="QLabel" name="label_7">
@@ -309,7 +289,7 @@
      <widget class="QLabel" name="label_8">
       <property name="geometry">
        <rect>
-        <x>620</x>
+        <x>600</x>
         <y>150</y>
         <width>101</width>
         <height>16</height>
@@ -322,7 +302,7 @@
      <widget class="QPushButton" name="planTrips_PSTButton">
       <property name="geometry">
        <rect>
-        <x>740</x>
+        <x>720</x>
         <y>550</y>
         <width>121</width>
         <height>28</height>
@@ -335,7 +315,7 @@
      <widget class="QPushButton" name="planTrips_VACButton">
       <property name="geometry">
        <rect>
-        <x>620</x>
+        <x>600</x>
         <y>550</y>
         <width>111</width>
         <height>28</height>
@@ -348,14 +328,47 @@
      <widget class="QPushButton" name="planTrips_startButton">
       <property name="geometry">
        <rect>
-        <x>870</x>
+        <x>850</x>
         <y>550</y>
-        <width>51</width>
+        <width>71</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
        <string>Start</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="planTrips_displayStartingColleges">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>170</y>
+        <width>321</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="planTrips_displayPlannedColleges">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>170</y>
+        <width>321</width>
+        <height>371</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="planTrips_addAllCollegesButton">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>550</y>
+        <width>71</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add All</string>
       </property>
      </widget>
     </widget>
@@ -443,16 +456,6 @@
        <string>&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</string>
       </property>
      </widget>
-     <widget class="QListView" name="adminCommands_displaySouvenirList">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>170</y>
-        <width>281</width>
-        <height>371</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
@@ -472,7 +475,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>110</y>
+         <y>100</y>
          <width>191</width>
          <height>22</height>
         </rect>
@@ -482,7 +485,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>150</y>
+         <y>140</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -498,7 +501,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>170</y>
+         <y>160</y>
          <width>191</width>
          <height>22</height>
         </rect>
@@ -508,7 +511,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>90</y>
+         <y>80</y>
          <width>91</width>
          <height>16</height>
         </rect>
@@ -543,9 +546,9 @@
       <widget class="QPushButton" name="adminCommands_saveEditButton">
        <property name="geometry">
         <rect>
-         <x>132</x>
+         <x>10</x>
          <y>200</y>
-         <width>71</width>
+         <width>191</width>
          <height>28</height>
         </rect>
        </property>
@@ -559,38 +562,25 @@
        <rect>
         <x>500</x>
         <y>550</y>
-        <width>81</width>
+        <width>131</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
-       <string>Add</string>
+       <string>Add New Souvenir</string>
       </property>
      </widget>
      <widget class="QPushButton" name="adminCommands_deleteButtonButton">
       <property name="geometry">
        <rect>
-        <x>590</x>
+        <x>640</x>
         <y>550</y>
-        <width>81</width>
+        <width>121</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
-       <string>Delete</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="adminCommands_loadDatabaseButton">
-      <property name="geometry">
-       <rect>
-        <x>680</x>
-        <y>550</y>
-        <width>101</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Load database</string>
+       <string>Delete Souvenir</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_21">
@@ -614,7 +604,7 @@
        <rect>
         <x>500</x>
         <y>140</y>
-        <width>281</width>
+        <width>301</width>
         <height>22</height>
        </rect>
       </property>
@@ -635,7 +625,7 @@
      <widget class="QPushButton" name="adminCommands_addButtonButton_2">
       <property name="geometry">
        <rect>
-        <x>330</x>
+        <x>770</x>
         <y>550</y>
         <width>31</width>
         <height>28</height>
@@ -643,6 +633,16 @@
       </property>
       <property name="text">
        <string>?</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="adminCommands_displaySouvenirList">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>170</y>
+        <width>301</width>
+        <height>371</height>
+       </rect>
       </property>
      </widget>
     </widget>
